@@ -1,0 +1,32 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: roger
+    hostname: roger
+    mem_limit: 350m
+    expose:
+      - "5672"
+      - "15672"
+    ports:
+      - 5672:5672
+      - 15672:15672
+    healthcheck:
+      test: [ "CMD", "rabbitmqctl", "status" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    mem_limit: 512m
+    expose:
+      - "9411"
+    ports:
+      - "9410:9411"
+    environment:
+      - "RABBIT_URI=amqp://guest:guest@roger:5672"
+      - STORAGE_TYPE=mem
+    depends_on:
+      rabbitmq:
+        condition: service_healthy

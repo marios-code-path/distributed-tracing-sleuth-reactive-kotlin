@@ -1,0 +1,16 @@
+services:
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: jessica
+    hostname: jessica
+    mem_limit: 512m
+    expose:
+      - "9411"
+    ports:
+      - "9409:9411"
+    environment:
+      - KAFKA_BOOTSTRAP_SERVERS=broker:9092
+      - STORAGE_TYPE=mem
+networks:
+  default:
+    name: sleuthy-rsocket_default
