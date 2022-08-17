@@ -3,8 +3,6 @@ package com.example.sleuthy.rsocket
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.cloud.sleuth.Span
-import org.springframework.cloud.sleuth.TraceContext
 import org.springframework.cloud.sleuth.Tracer
 import org.springframework.cloud.sleuth.instrument.reactor.ReactorSleuth
 import org.springframework.test.context.ActiveProfiles
@@ -20,7 +18,7 @@ class SleuthyReactorFluxTests : TestBase() {
 
     @Test
     fun `test manual client originated span request stream`(@Autowired
-                                                     tracer: Tracer) {
+                                                            tracer: Tracer) {
         StepVerifier
                 .create(
                         ReactorSleuth.tracedFlux(tracer,

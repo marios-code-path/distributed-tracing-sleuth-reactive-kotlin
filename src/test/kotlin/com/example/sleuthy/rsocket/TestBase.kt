@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.cloud.sleuth.Tracer
 import org.springframework.messaging.rsocket.RSocketRequester
 import reactor.util.retry.Retry
 import java.time.Duration
@@ -18,7 +19,7 @@ class TestBase {
 
     lateinit var requester: RSocketRequester
 
-    private val log: Logger = LoggerFactory.getLogger(this::class.java)
+    val log: Logger = LoggerFactory.getLogger(this::class.java)
 
     @BeforeEach
     fun setUp(@Autowired
@@ -32,6 +33,9 @@ class TestBase {
                             .doAfterRetry { sig -> log.warn("retried $sig") })
                 }.tcp("localhost", serverPort.toInt())
     }
+
+    fun traceDiag(tracer: Tracer) = println("PARENT: " + tracer.currentTraceContext()?.context()?.traceId())
+
 
     @Test
     fun contextLoads() {

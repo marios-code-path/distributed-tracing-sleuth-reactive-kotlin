@@ -13,7 +13,6 @@ import reactor.test.StepVerifier
 @ActiveProfiles("kafka")
 class KafkaTaggedRequestResponseTests : TaggedRequestResponseTests()
 
-
 class TaggedRequestResponseTests : TestBase() {
 
     @Test
@@ -33,6 +32,9 @@ class TaggedRequestResponseTests : TestBase() {
                         .retrieveMono<String>()
                         .contextWrite { ctx ->
                             ctx.put(TraceContext::class.java, manualSpan.context())
+                        }
+                        .doOnError { thrown ->
+                            manualSpan.error(thrown)
                         }
                         .doFinally { sig ->
                             manualSpan.end()
